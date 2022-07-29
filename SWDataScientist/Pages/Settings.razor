@@ -24,7 +24,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="mb-3 row">
+			<div class="mb-3 row" hidden="@(settingTypeValue == 0 | isFix == true)">
 				<label for="description" class="col-sm-4 col-form-label">Description</label>
 				<div class="col-sm-8">
 					<input id="description" @bind="description" class="form-control" placeholder="Description" />
@@ -51,7 +51,7 @@
 					<th>Active</th>
 					@*<th>Is Deleted?</th>*@
 					<th>Action
-						<a href="/settings" @onclick="ShowHideTrash" hidden="@(isFix == true)">
+						<a href="/settings" @onclick="ShowHideTrash" disabled="@(isFix == true)">
 							@if (showTrash == true)
 							{
 								<i class="oi oi-trash text-danger" title="Hide Trash" aria-hidden="true"></i>
@@ -78,14 +78,14 @@
 							<tr>
 								@*<td>@setting.SettingID</td>
 								<td>@setting.SettingTypeID</td>*@
-								<td>
+								<td class="col-sm-8">
 									<input	class="form-control" type="text" value="@(setting.Description)" placeholder="Description"
 											@oninput="(EventArgs) => {UpdateSetting(setting.SettingID, EventArgs.Value.ToString());}"
 											disabled="@(isFix == true || setting.IsDeleted == true || setting.IsActive == false)">
 								</td>
 								@*<td>@setting.IsFix</td>
 								<td>@setting.IsActive</td>*@
-								<td class="align-middle">
+								<td class="col-sm-2 align-middle">
 									<div class="form-check form-switch">
 										<input	class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="@(setting.IsActive == true)"
 												@onchange="@(()=> UpdateActiveSetting(setting.SettingID, setting.IsActive))"
@@ -93,9 +93,9 @@
 									</div>
 								</td>
 								@*<td>@setting.IsDeleted</td>*@
-								<td>
+								<td class="col-sm-2">
 									<button @onclick="@(()=> DeleteSetting(setting.SettingID, setting.IsDeleted))" type="button" title="Delete" class="btn oi oi-x" aria-label="Close"
-											hidden="@(isFix == true || setting.IsDeleted == true)"></button>
+											disabled="@(isFix == true || setting.IsDeleted == true)"></button>
 									<button @onclick="@(()=> DeleteSetting(setting.SettingID, setting.IsDeleted))" type="button" title="Restore" class="btn oi oi-reload" aria-label="Close"
 											hidden="@(setting.IsDeleted == false)"></button>
 								</td>
