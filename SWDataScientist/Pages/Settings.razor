@@ -1,0 +1,217 @@
+﻿@page "/settings"
+
+@using SWDataScientist.Models
+@using SWDataScientist.Services
+@inject ISettingsService SettingsService
+
+<div class="mb-3 row">
+	<h1>Settings</h1>
+</div>
+<div class="mb-3 row">
+	<div class="col-sm-3">
+		<div class="form-group">
+			<div class="mb-3 row">
+				<label for="settingType" class="col-sm-4 col-form-label">Setting Type</label>
+				<div class="col-sm-8">
+					<select id="settingType" class="form-select" @onchange="GetSettingBySettingTypeID">
+						<option value="0" selected disabled>Select Setting Type</option>
+						@if (settingType != null)
+							@foreach (var settingtype in settingType)
+							{
+								<option value="@(settingtype.SettingID)">@settingtype.Description</option>
+							}
+						}
+					</select>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="description" class="col-sm-4 col-form-label">Description</label>
+				<div class="col-sm-8">
+					<input id="description" @bind="description" class="form-control" placeholder="Description" />
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<div class="col-sm-12">
+					<button hidden="@(settingTypeValue == 0 | isFix == true)" @onclick="AddSetting" type="submit" class="mt-2 btn btn-primary float-end">Save Changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-sm-1 table-responsive-sm"></div>
+	<div class="col-sm-7 table-responsive-sm">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					@*<th>Setting ID</th>
+					<th>Setting Type ID</th>*@
+					<th>Description</th>
+					@*<th>Is Fixed?</th>
+					<th>Is Active?</th>*@
+					<th>Active</th>
+					@*<th>Is Deleted?</th>*@
+					<th>Action
+						<a href="/settings" @onclick="ShowHideTrash" hidden="@(isFix == true)">
+							@if (showTrash == true)
+							{
+								<i class="oi oi-trash text-danger" title="Hide Trash" aria-hidden="true"></i>
+							}
+							else
+							{
+								<i class="oi oi-trash text-black" title="Show Trash" aria-hidden="true"></i>
+							}
+						</a>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					@if (settings == null)
+					{
+							<tr>
+								<td rowspan="3">No Data Found...</td>
+							</tr>
+					}
+					else
+					{
+						@foreach (var setting in settings)
+						{
+							<tr>
+								@*<td>@setting.SettingID</td>
+								<td>@setting.SettingTypeID</td>*@
+								<td>
+									<input	class="form-control" type="text" value="@(setting.Description)" placeholder="Description"
+											@oninput="(EventArgs) => {UpdateSetting(setting.SettingID, EventArgs.Value.ToString());}"
+											disabled="@(isFix == true || setting.IsDeleted == true || setting.IsActive == false)">
+								</td>
+								@*<td>@setting.IsFix</td>
+								<td>@setting.IsActive</td>*@
+								<td class="align-middle">
+									<div class="form-check form-switch">
+										<input	class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="@(setting.IsActive == true)"
+												@onchange="@(()=> UpdateActiveSetting(setting.SettingID, setting.IsActive))"
+												disabled="@(isFix == true || setting.IsDeleted == true)">
+									</div>
+								</td>
+								@*<td>@setting.IsDeleted</td>*@
+								<td>
+									<button @onclick="@(()=> DeleteSetting(setting.SettingID, setting.IsDeleted))" type="button" title="Delete" class="btn oi oi-x" aria-label="Close"
+											hidden="@(isFix == true || setting.IsDeleted == true)"></button>
+									<button @onclick="@(()=> DeleteSetting(setting.SettingID, setting.IsDeleted))" type="button" title="Restore" class="btn oi oi-reload" aria-label="Close"
+											hidden="@(setting.IsDeleted == false)"></button>
+								</td>
+							</tr>
+						}
+					}
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-1 table-responsive-sm"></div>
+</div>
+
+@code {
+	private List<SettingsModel> settings;
+	private List<SettingsModel> settingType;
+
+	private string description;
+	private int settingTypeValue = 0;
+	private bool isFix = true;
+	private int isDeleted = 2;
+	private bool showTrash = false;
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		settingType = await SettingsService.GetSettingType();
+		settings = await SettingsService.GetSettingBySettingTypeID(settingTypeValue, isDeleted);
+		this.StateHasChanged();
+	}
+
+	private async void GetSettingBySettingTypeID(ChangeEventArgs e)
+	{
+		settingTypeValue = int.Parse(e.Value.ToString());
+		if (settingTypeValue == 6) { isFix = false; isDeleted = 0; } else { isFix = true; isDeleted = 2; }
+		settings = await SettingsService.GetSettingBySettingTypeID(settingTypeValue, isDeleted);
+		showTrash = true;
+		ShowHideTrash();
+		this.StateHasChanged();
+
+	}
+
+	private async void ShowHideTrash()
+	{
+		if (showTrash == false) { showTrash = true; isDeleted = 2; } else { showTrash = false; isDeleted = 0; }
+		settings = await SettingsService.GetSettingBySettingTypeID(settingTypeValue, isDeleted);
+		this.StateHasChanged();
+	}
+
+	private async void DeleteSetting(int settingID, bool isDeleted)
+	{
+		if (isDeleted == true) { isDeleted = false; } else { isDeleted = true; }
+		var response = await SettingsService.DeleteSetting(settingID, isDeleted);
+		if (response == null)
+		{
+			await App.Current.MainPage.DisplayAlert("Deleting Setting", "Setting is successfully deleted.", "OK");
+			await OnInitializedAsync();
+		}
+		else
+		{
+			await App.Current.MainPage.DisplayAlert("Uh oh!", "Something went wrong!", "OK");
+		}
+	}
+
+	private async void UpdateActiveSetting(int settingID, bool isActive)
+	{
+		if (isActive == true) { isActive = false; } else { isActive = true; }
+		var response = await SettingsService.UpdateActiveSetting(settingID, isActive);
+		if (response == null)
+		{
+			await OnInitializedAsync();
+		}
+		else
+		{
+			await App.Current.MainPage.DisplayAlert("Uh oh!", "Something went wrong!", "OK");
+		}
+	}
+
+	private async void UpdateSetting(int settingID, string description)
+	{
+		var response = await SettingsService.UpdateSetting(settingID, description);
+		if (response == null)
+		{
+			await OnInitializedAsync();
+		}
+		else
+		{
+			await App.Current.MainPage.DisplayAlert("Uh oh!", "Something went wrong!", "OK");
+		}
+	}
+
+	private async void AddSetting()
+	{
+		var settingModel = new Models.SettingsModel
+        {
+            SettingTypeID = settingTypeValue,
+			Description = description,
+			IsFix = false,
+            IsActive = true,
+            IsDeleted = false
+
+        };
+
+		int response = -1;
+
+		response = await SettingsService.AddSetting(settingModel);
+
+		if (response > 0)
+		{
+			description = string.Empty;
+			await App.Current.MainPage.DisplayAlert("Adding Setting", "Setting is successfully added.", "OK");
+			await OnInitializedAsync();
+		}
+		else
+		{
+			await App.Current.MainPage.DisplayAlert("Uh oh!", "Something went wrong!", "OK");
+		}
+
+	}
+}

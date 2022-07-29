@@ -1,0 +1,61 @@
+﻿@page "/monster"
+
+@using SWDataScientist.Models
+@using SWDataScientist.Services
+@inject IMonsterService MonsterService
+
+<h1>Monsters</h1>
+
+<p>Monsters Module</p>
+
+@if (monsters == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Family Name</th>
+				<th>Attribute</th>
+				<th>Awaken Name</th>
+				<th>Type</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var monster in monsters)
+			{
+				<tr>
+					<td>@monster.FamilyID</td>
+					<td>@monster.AttributeID</td>
+					<td>@monster.AwakenName</td>
+					<td>@monster.TypeID</td>
+					<td>
+						<button @onclick="@(()=> DeleteStudent(monster))" type="button" class="btn-close" aria-label="Close"></button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+@code {
+	private List<MonsterModel> monsters;
+
+	protected override async Task OnInitializedAsync()
+	{
+		monsters = await MonsterService.GetMonster();
+	}
+
+	private async void DeleteStudent(MonsterModel monsters)
+	{
+		var response = await MonsterService.DeleteMonster(monsters);
+		if (response > 0)
+		{
+			await OnInitializedAsync();
+			this.StateHasChanged();
+		}
+	}
+}
