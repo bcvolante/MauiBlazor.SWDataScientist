@@ -8,7 +8,7 @@
 	<h1>Settings</h1>
 </div>
 <div class="mb-3 row">
-	<div class="col-sm-3">
+	<div class="col-sm-4">
 		<div class="form-group">
 			<div class="mb-3 row">
 				<label for="settingType" class="col-sm-4 col-form-label">Setting Type</label>
@@ -32,14 +32,14 @@
 			</div>
 			<div class="mb-3 row">
 				<div class="col-sm-12">
-					<button hidden="@(settingTypeValue == 0 | isFix == true)" @onclick="AddSetting" type="submit" class="mt-2 btn btn-primary float-end">Save Changes</button>
+					<button @onclick="AddSetting" type="submit" class="mt-2 btn btn-primary float-end" hidden="@(settingTypeValue == 0 | isFix == true)">Save Changes</button>
 				</div>
 			</div>
 		</div>
 	</div>
 	
-	<div class="col-sm-1 table-responsive-sm"></div>
-	<div class="col-sm-7 table-responsive-sm">
+	@*<div class="col-sm-1 table-responsive-sm"></div>*@
+	<div class="col-sm-8 table-responsive-sm">
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -81,7 +81,8 @@
 								<td class="col-sm-8">
 									<input	class="form-control" type="text" value="@(setting.Description)" placeholder="Description"
 											@oninput="(EventArgs) => {UpdateSetting(setting.SettingID, EventArgs.Value.ToString());}"
-											disabled="@(isFix == true || setting.IsDeleted == true || setting.IsActive == false)">
+											disabled="@(isFix == true || setting.IsDeleted == true || setting.IsActive == false)"
+											>
 								</td>
 								@*<td>@setting.IsFix</td>
 								<td>@setting.IsActive</td>*@
@@ -94,10 +95,12 @@
 								</td>
 								@*<td>@setting.IsDeleted</td>*@
 								<td class="col-sm-2">
-									<button @onclick="@(()=> DeleteSetting(setting.SettingID, setting.IsDeleted))" type="button" title="Delete" class="btn oi oi-x" aria-label="Close"
+									<button @onclick="@(()=> DeleteSetting(setting.SettingID, setting.IsDeleted))" title="Delete" class="btn oi oi-x"
 											disabled="@(isFix == true || setting.IsDeleted == true)"></button>
-									<button @onclick="@(()=> DeleteSetting(setting.SettingID, setting.IsDeleted))" type="button" title="Restore" class="btn oi oi-reload" aria-label="Close"
+									<button @onclick="@(()=> DeleteSetting(setting.SettingID, setting.IsDeleted))" title="Restore" class="btn oi oi-reload"
 											hidden="@(setting.IsDeleted == false)"></button>
+									<button @onclick="() => modal.Open()" title="Tag" class="btn oi oi-tags" id="@(setting.SettingID)"
+											hidden="@(setting.SettingTypeID != 6)"></button>
 								</td>
 							</tr>
 						}
@@ -105,27 +108,106 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="col-sm-1 table-responsive-sm"></div>
+	@*<div class="col-sm-1 table-responsive-sm"></div>*@
+
+	<Modal @ref="modal">
+		<Title>Monster Awaken</Title>
+		<Body>
+			<div class="form-group">
+				<div class="mb-3 row">
+					<div class="col-sm-1"></div>
+					<label for="settingTypeAll" class="col-sm-4 col-form-label">Monster Family</label>
+					<div class="col-sm-6">
+						<select id="settingTypeAll" class="form-select">
+							<option value="0" selected disabled>Select Monster Family</option>
+							@if (settingTypeAll != null)
+								@foreach (var settings in settingTypeAll)
+								{
+									@if (settings.SettingTypeID == 6)
+									{
+										<option value="@(settings.SettingID)">@settings.Description</option>
+									}
+								}
+							}
+						</select>
+					</div>
+					<div class="col-sm-1"></div>
+				</div>
+				<div class="mb-3 row">
+					<div class="col-sm-1"></div>
+					<label for="settingTypeAll" class="col-sm-4 col-form-label">Attribute</label>
+					<div class="col-sm-6">
+						<select id="settingTypeAll" class="form-select">
+							<option value="0" selected disabled>Select Monster Attribute</option>
+							@if (settingTypeAll != null)
+								@foreach (var settings in settingTypeAll)
+								{
+									@if (settings.SettingTypeID == 7)
+									{
+										<option value="@(settings.SettingID)">@settings.Description</option>
+									}
+								}
+							}
+						</select>
+					</div>
+					<div class="col-sm-1"></div>
+				</div>
+				<div class="mb-3 row">
+					<div class="col-sm-1"></div>
+					<label for="settingTypeAll" class="col-sm-4 col-form-label">Type</label>
+					<div class="col-sm-6">
+						<select id="settingTypeAll" class="form-select">
+							<option value="0" selected disabled>Select Monster Type</option>
+							@if (settingTypeAll != null)
+								@foreach (var settings in settingTypeAll)
+								{
+									@if (settings.SettingTypeID == 10)
+									{
+										<option value="@(settings.SettingID)">@settings.Description</option>
+									}
+								}
+							}
+						</select>
+					</div>
+					<div class="col-sm-1"></div>
+				</div>
+				<div class="mb-3 row">
+					<div class="col-sm-1"></div>
+					<label for="settingType" class="col-sm-4 col-form-label">Awaken Name</label>
+					<div class="col-sm-6">
+						<input	class="form-control" type="text" placeholder="Awaken Name" >
+					</div>
+					<div class="col-sm-1"></div>
+				</div>
+			</div>
+		</Body>
+		<Footer>
+			<button type="submit" class="btn btn-primary float-end">Save Changes</button>
+			@*<button type="button" class="btn oi oi-x" aria-label="Close" data-dismiss="modal" @onclick="() => modal.Close()"></button>*@
+		</Footer>
+	</Modal>
 </div>
 
 @code {
 	private List<SettingsModel> settings;
 	private List<SettingsModel> settingType;
+	private List<SettingsModel> settingTypeAll;
 
 	private string description;
 	private int settingTypeValue = 0;
-	private bool isFix = true;
 	private int isDeleted = 2;
+	private bool isFix = true;
 	private bool showTrash = false;
-
 
 	protected override async Task OnInitializedAsync()
 	{
 		settingType = await SettingsService.GetSettingType();
 		settings = await SettingsService.GetSettingBySettingTypeID(settingTypeValue, isDeleted);
+		settingTypeAll = await SettingsService.GetSettingBySettingTypeID(-1, 0);
 		this.StateHasChanged();
 	}
 
+	// GET SETTING LIST BY SETTING TYPE
 	private async void GetSettingBySettingTypeID(ChangeEventArgs e)
 	{
 		settingTypeValue = int.Parse(e.Value.ToString());
@@ -134,7 +216,6 @@
 		showTrash = true;
 		ShowHideTrash();
 		this.StateHasChanged();
-
 	}
 
 	private async void ShowHideTrash()
@@ -190,7 +271,7 @@
 	{
 		var settingModel = new Models.SettingsModel
         {
-            SettingTypeID = settingTypeValue,
+			SettingTypeID = settingTypeValue,
 			Description = description,
 			IsFix = false,
             IsActive = true,
@@ -214,4 +295,6 @@
 		}
 
 	}
+
+	private Modal modal { get; set; }
 }

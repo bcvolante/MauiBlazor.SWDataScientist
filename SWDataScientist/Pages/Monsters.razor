@@ -3,12 +3,47 @@
 @using SWDataScientist.Models
 @using SWDataScientist.Services
 @inject IMonsterService MonsterService
+@inject ISettingsService SettingsService
 
-<h1>Monsters</h1>
+<div class="mb-3 row">
+	<h1>Monsters</h1>
+</div>
 
-<p>Monsters Module</p>
+<div class="mb-3 row">
+	<div class="col-sm-4">
+		<div class="form-group">
+			<div class="mb-3 row">
+				<label for="settingType" class="col-sm-5 col-form-label">Monster Family</label>
+				<div class="col-sm-7">
+					<select id="settingType" class="form-select">
+						<option value="0" selected disabled>Select Setting Type</option>
+						@if (settings != null)
+							@foreach (var settings in settings)
+							{
+								<option value="@(settings.SettingID)">@settings.Description</option>
+							}
+						}
+					</select>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="description" class="col-sm-5 col-form-label">Awaken Name</label>
+				<div class="col-sm-7">
+					<input id="awakenName" @bind="awakenName" class="form-control" placeholder="Awaken Name" />
+				</div>
+			</div>
+@*			<div class="mb-3 row">
+				<div class="col-sm-12">
+					<button @onclick="AddSetting" type="submit" class="mt-2 btn btn-primary float-end" hidden="@(settingTypeValue == 0 | isFix == true)">Save Changes</button>
+				</div>
+			</div>*@
+		</div>
+	</div>
+	<div class="col-sm-8">
+	</div>
+</div>
 
-@if (monsters == null)
+@*@if (monsters == null)
 {
 	<p><em>Loading...</em></p>
 }
@@ -39,23 +74,28 @@ else
 			}
 		</tbody>
 	</table>
-}
+}*@
 
 @code {
-	private List<MonsterModel> monsters;
+    private List<MonsterModel> monsters;
+	private List<SettingsModel> settings;
 
-	protected override async Task OnInitializedAsync()
-	{
-		monsters = await MonsterService.GetMonster();
-	}
+    private string awakenName;
+    private int settingTypeValue = 0;
 
-	private async void DeleteStudent(MonsterModel monsters)
-	{
-		var response = await MonsterService.DeleteMonster(monsters);
-		if (response > 0)
-		{
-			await OnInitializedAsync();
-			this.StateHasChanged();
-		}
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        monsters = await MonsterService.GetMonster();
+        settings = await SettingsService.GetSettingBySettingTypeID(6, 0);
+        this.StateHasChanged();
+    }
+
+    private async void DeleteStudent(MonsterModel monsters)
+    {
+        var response = await MonsterService.DeleteMonster(monsters);
+        if (response > 0)
+        {
+            await OnInitializedAsync();
+        }
+    }
 }

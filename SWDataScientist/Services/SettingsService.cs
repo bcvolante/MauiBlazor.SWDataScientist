@@ -50,7 +50,7 @@ namespace SWDataScientist.Services
         }
         public async Task<List<SettingsModel>> GetSettingType()
         {
-            return await _dbConnection.QueryAsync<SettingsModel>($"SELECT * FROM {nameof(SettingsModel)} WHERE SettingTypeID = 5");
+            return await _dbConnection.QueryAsync<SettingsModel>($"SELECT * FROM {nameof(SettingsModel)} WHERE SettingTypeID = 5 AND isActive = true");
             //return await _dbConnection.Table<SettingsModel>().ToListAsync();
         }
 
@@ -62,7 +62,7 @@ namespace SWDataScientist.Services
 
         public async Task<List<SettingsModel>> GetSettingBySettingTypeID(int SettingTypeID, int isDeleted)
         {
-            return await _dbConnection.QueryAsync<SettingsModel>($"SELECT * FROM {nameof(SettingsModel)} WHERE SettingTypeID = {SettingTypeID} AND isDeleted = CASE WHEN {isDeleted} = 2 THEN isDeleted WHEN {isDeleted} = 1 THEN true ELSE false END");
+            return await _dbConnection.QueryAsync<SettingsModel>($"SELECT * FROM {nameof(SettingsModel)} WHERE SettingTypeID = IIF({SettingTypeID} = -1,SettingTypeID,{SettingTypeID}) AND isDeleted = CASE WHEN {isDeleted} = 2 THEN isDeleted WHEN {isDeleted} = 1 THEN true ELSE false END");
         }
 
         public async Task<SettingsModel> UpdateSetting(int SettingID, string description)
