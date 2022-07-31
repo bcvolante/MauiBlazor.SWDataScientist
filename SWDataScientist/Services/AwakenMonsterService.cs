@@ -40,5 +40,20 @@ namespace SWDataScientist.Services
         {
             return await _dbConnection.UpdateAsync(awakenMonsterModel);
         }
+
+        //public async Task<List<AwakenMonsterModel>> GetAwakenMonster(int AwakenMonsterID)
+        //{
+        //    return await _dbConnection.QueryAsync<AwakenMonsterModel>($"SELECT amm.*,f.Description FamilyName,a.Description AttributeName,t.Description TypeName" +
+        //        $"FROM {nameof(AwakenMonsterModel)} amm" +
+        //        $"LEFT JOIN {nameof(SettingsModel)} f ON amm.FamilyID = f.SettingID" +
+        //        $"LEFT JOIN {nameof(SettingsModel)} a ON amm.AttributeID = a.SettingID" +
+        //        $"LEFT JOIN {nameof(SettingsModel)} t ON amm.TypeID = t.SettingID" +
+        //        $" where amm.AwakenMonsterID = IIF({AwakenMonsterID} = 0,amm.AwakenMonsterID,{AwakenMonsterID})");
+        //}
+        public async Task<List<AwakenMonsterModel>> GetAwakenMonster()
+        {
+            return await _dbConnection.Table<AwakenMonsterModel>().ToListAsync();
+
+        }
     }
 }

@@ -4,6 +4,7 @@
 @using SWDataScientist.Services
 @inject IMonsterService MonsterService
 @inject ISettingsService SettingsService
+@inject IAwakenMonsterService AwakenMonsterService
 
 <div class="mb-3 row">
 	<h1>Monsters</h1>
@@ -13,88 +14,143 @@
 	<div class="col-sm-4">
 		<div class="form-group">
 			<div class="mb-3 row">
-				<label for="settingType" class="col-sm-5 col-form-label">Monster Family</label>
-				<div class="col-sm-7">
-					<select id="settingType" class="form-select">
+				<label for="AwakenMonsterID" class="col-sm-4 col-form-label">Monster Name</label>
+				<div class="col-sm-8">
+					<select id="AwakenMonsterID" class="form-select" @bind="awakenMonsterID">
 						<option value="0" selected disabled>Select Setting Type</option>
-						@if (settings != null)
-							@foreach (var settings in settings)
+						@if (awakenMonster != null)
+							@foreach (var awakenMonster in awakenMonster)
 							{
-								<option value="@(settings.SettingID)">@settings.Description</option>
+								<option value="@(awakenMonster.AwakenMonsterID)">@awakenMonster.AwakenName</option>
 							}
 						}
 					</select>
 				</div>
 			</div>
 			<div class="mb-3 row">
-				<label for="description" class="col-sm-5 col-form-label">Awaken Name</label>
-				<div class="col-sm-7">
-					<input id="awakenName" @bind="awakenName" class="form-control" placeholder="Awaken Name" />
+				<label for="monsterLevel" class="col-sm-4 col-form-label">Monster Level</label>
+				<div class="col-sm-8">
+					<input type="number" min="1" max="40" id="monsterLevel" @bind="monsterLevel" class="form-control" />
 				</div>
 			</div>
-@*			<div class="mb-3 row">
-				<div class="col-sm-12">
-					<button @onclick="AddSetting" type="submit" class="mt-2 btn btn-primary float-end" hidden="@(settingTypeValue == 0 | isFix == true)">Save Changes</button>
+			<div class="mb-3 row">
+				<label for="starLevel" class="col-sm-4 col-form-label">Monster Level</label>
+				<div class="col-sm-8">
+					<select @bind="starLevel" id="starLevel" class="form-select">
+						<option value="0" selected disabled>Select Star Level</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6" selected>6</option>
+					</select>
 				</div>
-			</div>*@
+			</div>
+			<div class="mb-3 row">
+				<label for="awakenLevel" class="col-sm-4 col-form-label">Awaken Level</label>
+				<div class="col-sm-8">
+					<select @bind="awakenLevel" id="awakenLevel" class="form-select">
+						<option value="0" selected disabled>Select Awaken Level</option>
+						<option value="1">Normal</option>
+						<option value="2" selected>Awaken</option>
+						<option value="3">Second Awaken</option>
+					</select>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<div class="col-sm-12">
+					<button @onclick="AddMonster" type="submit" class="mt-2 btn btn-primary float-end">Save Changes</button>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="col-sm-8">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Monster ID</th>
+					<th>Monster Level</th>
+					<th>Awaken Monster ID</th>
+					<th>Awaken Level</th>
+					<th>Star Level</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+					@if (monsters == null)
+					{
+							<tr>
+								<td rowspan="6">No Data Found...</td>
+							</tr>
+					}
+					else
+					{
+						@foreach (var monsters in monsters)
+						{
+							<tr>
+								<td>@monsters.MonsterID</td>
+								<td>@monsters.MonsterLevel</td>
+								<td>@monsters.AwakenMonsterID</td>
+								<td>@monsters.AwakenLevel</td>
+								<td>@monsters.StarLevel</td>
+								<td class="col-sm-3">
+									<button title="Tag" class="btn oi oi-tags"></button>
+								</td>
+							</tr>
+						}
+					}
+			</tbody>
+		</table>
 	</div>
 </div>
 
-@*@if (monsters == null)
-{
-	<p><em>Loading...</em></p>
-}
-else
-{
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Family Name</th>
-				<th>Attribute</th>
-				<th>Awaken Name</th>
-				<th>Type</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var monster in monsters)
-			{
-				<tr>
-					<td>@monster.FamilyID</td>
-					<td>@monster.AttributeID</td>
-					<td>@monster.AwakenName</td>
-					<td>@monster.TypeID</td>
-					<td>
-						<button @onclick="@(()=> DeleteStudent(monster))" type="button" class="btn-close" aria-label="Close"></button>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-}*@
-
 @code {
-    private List<MonsterModel> monsters;
-	private List<SettingsModel> settings;
+	private List<MonsterModel> monsters;
+	private List<AwakenMonsterModel> awakenMonster;
 
-    private string awakenName;
+	//private string awakenName;
+	public int monsterID = 0;
+	public int monsterLevel = 40;
+	public int awakenMonsterID = 0;
+	public int awakenLevel = 1;
+	public int starLevel = 6;
 
-    protected override async Task OnInitializedAsync()
-    {
-        monsters = await MonsterService.GetMonster();
-        settings = await SettingsService.GetSettingBySettingTypeID(6, 0);
-        this.StateHasChanged();
+	protected override async Task OnInitializedAsync()
+	{
+		monsters = await MonsterService.GetMonster();
+		awakenMonster = await AwakenMonsterService.GetAwakenMonster();
+		monsterLevel = 40;
+		awakenLevel = 1;
+		starLevel = 6;
+		this.StateHasChanged();
     }
 
-    private async void DeleteStudent(MonsterModel monsters)
-    {
-        var response = await MonsterService.DeleteMonster(monsters);
-        if (response > 0)
-        {
-            await OnInitializedAsync();
-        }
-    }
+	private async void AddMonster()
+	{
+		var monsterModel = new Models.MonsterModel
+			{
+				MonsterID = monsterID,
+				AwakenMonsterID = awakenMonsterID,
+				MonsterLevel = monsterLevel,
+				AwakenLevel = awakenLevel,
+				StarLevel = starLevel
+
+			};
+
+		int response = -1;
+
+		response = await MonsterService.AddMonster(monsterModel);
+
+		if (response > 0)
+		{
+			await App.Current.MainPage.DisplayAlert("Saving Monster", "Monster is successfully saved.", "OK");
+			await OnInitializedAsync();
+		}
+		else
+		{
+			await App.Current.MainPage.DisplayAlert("Uh oh!", "Something went wrong!", "OK");
+		}
+
+	}
 }

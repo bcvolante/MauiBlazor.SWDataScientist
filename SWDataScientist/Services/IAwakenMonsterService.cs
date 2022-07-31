@@ -13,5 +13,6 @@ namespace SWDataScientist.Services
         Task<int> AddAwakenMonster(AwakenMonsterModel awakenMonsterModel);
         Task<int> UpdateAwakenMonster(AwakenMonsterModel awakenMonsterModel);
         Task<AwakenMonsterModel> GetAwakenMonsterByAttributeID(int attributeID, int settingID);
+        Task<List<AwakenMonsterModel>> GetAwakenMonster();
     }
 }

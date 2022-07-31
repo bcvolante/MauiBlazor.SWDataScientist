@@ -24,6 +24,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IMonsterService, MonsterService>();
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
         builder.Services.AddSingleton<IAwakenMonsterService, AwakenMonsterService>();
+        builder.Services.AddSingleton<IRunesService, RunesService>();
 
         return builder.Build();
 	}
