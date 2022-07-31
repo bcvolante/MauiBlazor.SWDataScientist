@@ -1,0 +1,264 @@
+﻿@using SWDataScientist.Models
+@using SWDataScientist.Services
+@inject ISettingsService SettingsService
+@inject IAwakenMonsterService AwakenMonsterService
+
+<div class="modal @modalClass" tabindex="-1" role="dialog" style="display:@modalDisplay; overflow-y: auto;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Title</h5>
+                <button type="button" class="btn oi oi-x" aria-label="Close" data-dismiss="modal" @onclick="() => Close()"></button>
+            </div>
+            <div class="modal-body">
+                
+			    <div class="form-group">
+				    <div class="mb-3 row">
+					    <div class="col-sm-1"></div>
+					    <label for="monsterFamily" class="col-sm-4 col-form-label">Monster Family</label>
+					    <label id="monsterFamily" class="col-sm-6 col-form-label">@description</label>
+					    @*<div class="col-sm-6">
+						    <select id="settingTypeAll" class="form-select">
+							    <option value="0" disabled>Select Monster Family</option>
+							    @if (settingTypeAll != null)
+								    @foreach (var settings in settingTypeAll)
+								    {
+									    @if (settings.SettingTypeID == 6)
+									    {
+										    @if(settings.SettingID == settingID)
+										    {
+											    <option value="@(settings.SettingID)" selected>@settings.Description</option>
+										    }
+										    else
+										    {
+											    <option value="@(settings.SettingID)">@settings.Description</option>	
+										    }
+									    }
+								    }
+							    }
+						    </select>
+					    </div>*@
+					    <div class="col-sm-1"></div>
+				    </div>
+                    
+					<div class="mb-3 row">
+						<div class="col-sm-1"></div>
+						<label for="attributeID" class="col-sm-4 col-form-label">Attribute</label>
+						<div class="col-sm-6">
+							<select id="attributeID" class="form-select" @bind="GetAttribute">
+								<option value="0" selected disabled>Select Monster Attribute</option>
+								@if (settingTypeAll != null)
+									@foreach (var settings in settingTypeAll)
+									{
+										@if (settings.SettingTypeID == 7)
+										{
+											<option value="@(settings.SettingID)">@settings.Description</option>
+										}
+									}
+								}
+							</select>
+						</div>
+					<div class="col-sm-1"></div>
+					</div>
+					<div class="mb-3 row">
+						<div class="col-sm-1"></div>
+						<label for="typeID" class="col-sm-4 col-form-label">Type</label>
+						<div class="col-sm-6">
+							<select id="typeID" @bind="typeID" class="form-select">
+								<option value="0" selected disabled>Select Monster Type</option>
+								@if (settingTypeAll != null)
+									@foreach (var settings in settingTypeAll)
+									{
+										@if (settings.SettingTypeID == 10)
+										{
+											<option value="@(settings.SettingID)">@settings.Description</option>
+										}
+
+									}
+								}
+							</select>
+						</div>
+						<div class="col-sm-1"></div>
+					</div>
+					<div class="mb-3 row">
+						<div class="col-sm-1"></div>
+						<label for="awakenName" class="col-sm-4 col-form-label">Awaken Name</label>
+						<div class="col-sm-6">
+							<input id="awakenName" @bind="awakenName" class="form-control" type="text" placeholder="Awaken Name">
+						</div>
+						<div class="col-sm-1"></div>
+					</div>
+					<div class="mb-3 row">
+						<div class="col-sm-1"></div>
+						<label for="awakenName" class="col-sm-4 col-form-label">Secondary Awaken</label>
+						<div class="col-sm-6">
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" id="isSecondAwaken" @bind="isSecondAwaken">
+							</div>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<div class="col-sm-1"></div>
+						<label for="typeID" class="col-sm-4 col-form-label">Type</label>
+						<div class="col-sm-6">
+							<select @bind="naturalStarLevel" id="typeID" class="form-select">
+								<option value="0" selected disabled>Select Natural Star Level</option>
+								<option value="1" selected>1</option>
+								<option value="2" selected>2</option>
+								<option value="3" selected>3</option>
+								<option value="4" selected>4</option>
+								<option value="5" selected>5</option>
+							</select>
+						</div>
+						<div class="col-sm-1"></div>
+					</div>
+                    @*@Body*@
+                </div>
+            </div>
+			<div class="modal-footer">
+				<input id="awakenMonsterID" @bind="awakenMonsterID" class="form-control" type="text" placeholder="Awaken Monster ID">
+				<button @onclick="AddAwakenMonster" type="submit" class="btn btn-primary">Save Changes</button>
+                @Footer
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (showBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+	private List<SettingsModel> settingTypeAll;
+	private int settingID = 0;
+	private string description;
+
+	private int awakenMonsterID = 0;
+	private int attributeID = 0;
+	private int typeID = 0;
+	private string awakenName = "";
+	private bool isSecondAwaken = false;
+	private int naturalStarLevel = 0;
+
+	[Parameter]
+	public RenderFragment Title { get; set; }
+
+	//[Parameter]
+	//public RenderFragment Body { get; set; }
+
+	[Parameter]
+	public RenderFragment Footer { get; set; }
+
+	private string modalDisplay = "none;";
+	private string modalClass = "";
+	private bool showBackdrop = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		settingTypeAll = await SettingsService.GetSettingBySettingTypeID(-1, 0);
+	}
+
+	public void Open(int SettingID, string Description)
+	{
+		settingID = SettingID;
+		description = Description;
+
+		awakenMonsterID = 0;
+		attributeID = 0;
+		typeID = 0;
+		awakenName = "";
+		isSecondAwaken = false;
+		naturalStarLevel = 0;
+
+		modalDisplay = "block;";
+		modalClass = "show";
+		showBackdrop = true;
+	}
+
+	public void Close()
+	{
+		modalDisplay = "none";
+		modalClass = "";
+		showBackdrop = false;
+	}
+
+	private async void AddAwakenMonster()
+	{
+		var awakenMonster = new Models.AwakenMonsterModel
+			{
+				AwakenMonsterID = awakenMonsterID,
+				FamilyID = settingID,
+				AttributeID = attributeID,
+				TypeID = typeID,
+				AwakenName = awakenName,
+				IsSecondAwaken = isSecondAwaken,
+				NaturalStarLevel = naturalStarLevel
+
+			};
+
+		int response = -1;
+
+		if (attributeID != 0 && typeID != 0 && awakenName != "")
+		{
+			if (awakenMonsterID == 0)
+			{				
+				response = await AwakenMonsterService.AddAwakenMonster(awakenMonster);
+				awakenMonsterID = 0;
+				attributeID = 0;
+				typeID = 0;
+				awakenName = string.Empty;
+				isSecondAwaken = false;
+				naturalStarLevel = 0;
+			}
+			else
+			{
+				response = await AwakenMonsterService.UpdateAwakenMonster(awakenMonster);
+			}
+		}
+
+		if (response > 0)
+		{
+			await App.Current.MainPage.DisplayAlert("Saving Monster", "Awaken monster is successfully saved.", "OK");
+		}
+		else
+		{
+			await App.Current.MainPage.DisplayAlert("Uh oh!", "Something went wrong!", "OK");
+		}
+		this.StateHasChanged();
+	}
+
+	public int GetAttribute
+	{
+		get { return attributeID; }
+		set
+		{
+			attributeID = value;
+			GetAwakenMonsterByAttributeID(attributeID);
+		}
+	}
+
+	private async void GetAwakenMonsterByAttributeID(int attributeID)
+	{
+		var response = await AwakenMonsterService.GetAwakenMonsterByAttributeID(attributeID, settingID);
+		if (response != null)
+		{
+			awakenMonsterID = response.AwakenMonsterID;
+			typeID = response.TypeID;
+			awakenName = response.AwakenName;
+			isSecondAwaken = response.IsSecondAwaken;
+			naturalStarLevel = response.NaturalStarLevel;
+
+		}
+		else
+		{
+			awakenMonsterID = 0;
+			attributeID = 0;
+			typeID = 0;
+			awakenName = "";
+			isSecondAwaken = false;
+			naturalStarLevel = 0;
+		}
+		this.StateHasChanged();
+	}
+}

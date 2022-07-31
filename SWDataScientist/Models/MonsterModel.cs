@@ -11,10 +11,9 @@ namespace SWDataScientist.Models
     {
         [PrimaryKey, AutoIncrement]
         public int MonsterID { get; set; }
-        public int FamilyID { get; set; }
-        public int AttributeID { get; set; }
-        public string AwakenName { get; set; }
-        public bool IsSecondAwaken { get; set; }
-        public int TypeID { get; set; }
+        public int MonsterLevel { get; set; }
+        public int AwakenMonsterID { get; set; }
+        public int AwakenLevel { get; set; }
+        public int StarLevel { get; set; }
     }
 }

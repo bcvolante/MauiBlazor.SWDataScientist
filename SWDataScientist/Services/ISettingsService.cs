@@ -9,6 +9,7 @@ namespace SWDataScientist.Services
 { 
     public interface ISettingsService
     {
+        //Setting Type
         Task<List<SettingsModel>> GetSetting();
         Task<List<SettingsModel>> GetSettingType();
         Task<SettingsModel> GetSettingByID(int SettingID);
@@ -17,6 +18,5 @@ namespace SWDataScientist.Services
         Task<SettingsModel> UpdateActiveSetting(int SettingID, bool IsActive);
         Task<int> AddSetting(SettingsModel settingsModel);
         Task<SettingsModel> UpdateSetting(int SettingID, string description);
-        //Task<int> DeleteSetting(SettingsModel settingsModel);
     }
 }
