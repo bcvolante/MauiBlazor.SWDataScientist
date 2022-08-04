@@ -13,236 +13,8 @@
 	<div class="col-sm-12">
 		<div class="form-group">
 			<div class="mb-3 row">
-				<label for="isAncient" class="col-sm-1 col-form-label">Ancient Rune</label>
-				<div class="col-sm-1">
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="isAncient" @bind="isAncient">
-					</div>
-				</div>
-				<label for="slot" class="col-sm-1 col-form-label">Slot</label>
-				<div class="col-sm-1">
-					<select @bind="slot" id="slot" class="form-select">
-						<option value="0" selected disabled>Select Slot</option>
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6" selected>6</option>
-					</select>
-				</div>
-				<label for="gradeLevel" class="col-sm-1 col-form-label">Grade Level</label>
-				<div class="col-sm-3">
-					<select @bind="gradeLevel" id="gradeLevel" class="form-select">
-						<option value="0" selected disabled>Select Grade Level</option>
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6" selected>6</option>
-					</select>
-				</div>
-				<label for="powerUpLevel" class="col-sm-1 col-form-label">Power Up Level</label>
-				<div class="col-sm-3">
-					<input type="number" min="1" max="15" id="powerUpLevel" @bind="powerUpLevel" class="form-control" />
-				</div>
-			</div>
-			<div class="mb-3 row">
-				<label for="typeID" class="col-sm-1 col-form-label">Type</label>
-				<div class="col-sm-3">
-					<select id="typeID" @bind="typeID" class="form-select">
-						<option value="0" selected disabled>Select Rune Type</option>
-						@if (settingTypeAll != null)
-							@foreach (var settings in settingTypeAll)
-							{
-								@if (settings.SettingTypeID == 10)
-								{
-									<option value="@(settings.SettingID)">@settings.Description</option>
-								}
-
-							}
-						}
-					</select>
-				</div>
-				<label for="rarityID" class="col-sm-1 col-form-label">Rarity</label>
-				<div class="col-sm-3">
-					<select id="rarityID" @bind="rarityID" class="form-select">
-						<option value="0" selected disabled>Select Rune Rarity</option>
-						@if (settingTypeAll != null)
-							@foreach (var settings in settingTypeAll)
-							{
-								@if (settings.SettingTypeID == 10)
-								{
-									<option value="@(settings.SettingID)">@settings.Description</option>
-								}
-
-							}
-						}
-					</select>
-				</div>
-				<label for="statConverted" class="col-sm-1 col-form-label">Property Converted</label>
-				<div class="col-sm-3">
-					<select @bind="statConverted" id="statConverted" class="form-select">
-						<option value="0" selected disabled>Select Property Converted</option>
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4" selected>4</option>
-					</select>
-				</div>
-			</div>
-
-			<div class="mb-3 row">
-				<label for="mainStat" class="col-sm-1 col-form-label">Main Property</label>
-				<div class="col-sm-3">
-					<select id="mainStat" @bind="mainStat" class="form-select">
-						<option value="0" selected disabled>Select Main Property</option>
-						@if (settingTypeAll != null)
-							@foreach (var settings in settingTypeAll)
-							{
-								@if (settings.SettingTypeID == 10)
-								{
-									<option value="@(settings.SettingID)">@settings.Description</option>
-								}
-
-							}
-						}
-					</select>
-				</div>
-				<label for="prefixStat" class="col-sm-1 col-form-label">Prefix Property</label>
-				<div class="col-sm-3">
-					<select id="prefixStat" @bind="prefixStat" class="form-select">
-						<option value="0" selected disabled>Select Prefix Property</option>
-						@if (settingTypeAll != null)
-							@foreach (var settings in settingTypeAll)
-							{
-								@if (settings.SettingTypeID == 10)
-								{
-									<option value="@(settings.SettingID)">@settings.Description</option>
-								}
-
-							}
-						}
-					</select>
-				</div>
-				<label for="prefixStatValue" class="col-sm-1 col-form-label">Prefix Value</label>
-				<div class="col-sm-3">
-					<input type="number" min="1" max="40" id="prefixStatValue" @bind="prefixStatValue" class="form-control" />
-				</div>
-			</div>	
-
-			<div class="mb-3 row">
-				<label for="stat1" class="col-sm-1 col-form-label">Property 1</label>
-				<div class="col-sm-3">
-					<select id="stat1" @bind="stat1" class="form-select">
-						<option value="0" selected disabled>Select Property 1</option>
-						@if (settingTypeAll != null)
-							@foreach (var settings in settingTypeAll)
-							{
-								@if (settings.SettingTypeID == 10)
-								{
-									<option value="@(settings.SettingID)">@settings.Description</option>
-								}
-
-							}
-						}
-					</select>
-				</div>
-				<label for="stat1Value" class="col-sm-1 col-form-label">Property 1 Value</label>
-				<div class="col-sm-3">
-					<input type="number" min="1" max="40" id="stat1Value" @bind="stat1Value" class="form-control" />
-				</div>
-				<label for="stat1Amplify" class="col-sm-1 col-form-label">Property 1 Amplify</label>
-				<div class="col-sm-3">
-					<input type="number" min="1" max="40" id="stat1Amplify" @bind="stat1Amplify" class="form-control" />
-				</div>
-			</div>
-
-			<div class="mb-3 row">
-				<label for="stat2" class="col-sm-1 col-form-label">Property 2</label>
-				<div class="col-sm-3">
-					<select id="stat2" @bind="stat2" class="form-select">
-						<option value="0" selected disabled>Select Property 2</option>
-						@if (settingTypeAll != null)
-							@foreach (var settings in settingTypeAll)
-							{
-								@if (settings.SettingTypeID == 10)
-								{
-									<option value="@(settings.SettingID)">@settings.Description</option>
-								}
-
-							}
-						}
-					</select>
-				</div>
-				<label for="stat2Value" class="col-sm-1 col-form-label">Property 2 Value</label>
-				<div class="col-sm-3">
-					<input type="number" min="2" max="40" id="stat2Value" @bind="stat2Value" class="form-control" />
-				</div>
-				<label for="stat2Amplify" class="col-sm-1 col-form-label">Property 2 Amplify</label>
-				<div class="col-sm-3">
-					<input type="number" min="2" max="40" id="stat2Amplify" @bind="stat2Amplify" class="form-control" />
-				</div>
-			</div>
-
-			<div class="mb-3 row">
-				<label for="stat3" class="col-sm-1 col-form-label">Property 3</label>
-				<div class="col-sm-3">
-					<select id="stat3" @bind="stat3" class="form-select">
-						<option value="0" selected disabled>Select Property 3</option>
-						@if (settingTypeAll != null)
-							@foreach (var settings in settingTypeAll)
-							{
-								@if (settings.SettingTypeID == 10)
-								{
-									<option value="@(settings.SettingID)">@settings.Description</option>
-								}
-
-							}
-						}
-					</select>
-				</div>
-				<label for="stat3Value" class="col-sm-1 col-form-label">Property 3 Value</label>
-				<div class="col-sm-3">
-					<input type="number" min="3" max="40" id="stat3Value" @bind="stat3Value" class="form-control" />
-				</div>
-				<label for="stat3Amplify" class="col-sm-1 col-form-label">Property 3 Amplify</label>
-				<div class="col-sm-3">
-					<input type="number" min="3" max="40" id="stat3Amplify" @bind="stat3Amplify" class="form-control" />
-				</div>
-			</div>
-
-			<div class="mb-3 row">
-				<label for="stat4" class="col-sm-1 col-form-label">Property 4</label>
-				<div class="col-sm-3">
-					<select id="stat4" @bind="stat4" class="form-select">
-						<option value="0" selected disabled>Select Property 4</option>
-						@if (settingTypeAll != null)
-							@foreach (var settings in settingTypeAll)
-							{
-								@if (settings.SettingTypeID == 10)
-								{
-									<option value="@(settings.SettingID)">@settings.Description</option>
-								}
-
-							}
-						}
-					</select>
-				</div>
-				<label for="stat4Value" class="col-sm-1 col-form-label">Property 4 Value</label>
-				<div class="col-sm-3">
-					<input type="number" min="4" max="40" id="stat4Value" @bind="stat4Value" class="form-control" />
-				</div>
-				<label for="stat4Amplify" class="col-sm-1 col-form-label">Property 4 Amplify</label>
-				<div class="col-sm-3">
-					<input type="number" min="4" max="40" id="stat4Amplify" @bind="stat4Amplify" class="form-control" />
-				</div>
-			</div>
-
-			<div class="mb-3 row">
 				<div class="col-sm-12">
-					<button @onclick="AddRunes" type="submit" class="mt-2 btn btn-primary float-end">Save Changes</button>
+					<button @onclick="() => runesDetail.Open()" type="submit" class="mt-2 btn btn-primary float-end">Save Changes</button>
 				</div>
 			</div>
 		</div>
@@ -274,6 +46,7 @@
 					<th>Property 4 Value		 	</th>
 					<th>Property 4 Amplify	 	</th>
 					<th>Property Converted		</th>
+					<th>Action		</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -322,9 +95,21 @@
 	</div>
 </div>
 
+<RunesDetail @ref="runesDetail">
+	<Title>Rune Details</Title>
+	@*<Body>
+	</Body>*@
+	<Footer>
+		@*<button type="submit" class="btn btn-primary float-end">Save Changes</button>*@
+		@*<button type="button" class="btn oi oi-x" aria-label="Close" data-dismiss="modal" @onclick="() => modal.Close()"></button>*@
+	</Footer>
+</RunesDetail>
+
 @code {
 	private List<RunesModel> runes;
 	private List<SettingsModel> settingTypeAll;
+
+	private RunesDetail runesDetail { get; set; }
 
 	public int runeID;
 	public bool isAncient;
@@ -355,51 +140,5 @@
 		runes = await RunesService.GetRunes();
 		settingTypeAll = await SettingsService.GetSettingBySettingTypeID(-1, 0);
 		this.StateHasChanged();
-	}
-
-	private async void AddRunes()
-	{
-		var runesModel = new Models.RunesModel
-			{
-				RuneID           = runeID           ,
-				IsAncient		 = isAncient		,
-				GradeLevel		 = gradeLevel		,
-				PowerUpLevel	 = powerUpLevel		,
-				TypeID			 = typeID			,
-				RarityID		 = rarityID			,
-				Slot			 = slot				,
-				MainStat		 = mainStat			,
-				PrefixStat		 = prefixStat		,
-				PrefixStatValue	 = prefixStatValue	,
-				Stat1			 = stat1			,
-				Stat1Value		 = stat1Value		,
-				Stat1Amplify	 = stat1Amplify		,
-				Stat2			 = stat2			,
-				Stat2Value		 = stat2Value		,
-				Stat2Amplify	 = stat2Amplify		,
-				Stat3			 = stat3			,
-				Stat3Value		 = stat3Value		,
-				Stat3Amplify	 = stat3Amplify		,
-				Stat4			 = stat4			,
-				Stat4Value		 = stat4Value		,
-				Stat4Amplify	 = stat4Amplify		,
-				StatConverted	 = statConverted		
-
-			};
-
-		int response = -1;
-
-		response = await RunesService.AddRunes(runesModel);
-
-		if (response > 0)
-		{
-			await App.Current.MainPage.DisplayAlert("Saving Runes", "Runes is successfully saved.", "OK");
-			await OnInitializedAsync();
-		}
-		else
-		{
-			await App.Current.MainPage.DisplayAlert("Uh oh!", "Something went wrong!", "OK");
-		}
-
 	}
 }
