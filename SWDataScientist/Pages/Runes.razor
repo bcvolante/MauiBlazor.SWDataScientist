@@ -14,7 +14,7 @@
 		<div class="form-group">
 			<div class="mb-3 row">
 				<div class="col-sm-12">
-					<button @onclick="() => runesDetail.Open()" type="submit" class="mt-2 btn btn-primary float-end">Save Changes</button>
+					<button @onclick="() => runesDetail.Open()" type="submit" class="mt-2 btn btn-primary float-end">Add Rune</button>
 				</div>
 			</div>
 		</div>
@@ -31,7 +31,7 @@
 					<th>Rarity ID		 	</th>
 					<th>Slot			 	</th>
 					<th>Main Property		 	</th>
-					<th>Prefix Property		 	</th>
+@*					<th>Prefix Property		 	</th>
 					<th>Prefix Property Value	 	</th>
 					<th>Property 1			 	</th>
 					<th>Property 1 Value		 	</th>
@@ -45,7 +45,7 @@
 					<th>Property 4			 	</th>
 					<th>Property 4 Value		 	</th>
 					<th>Property 4 Amplify	 	</th>
-					<th>Property Converted		</th>
+					<th>Property Converted		</th>*@
 					<th>Action		</th>
 				</tr>
 			</thead>
@@ -69,7 +69,7 @@
 							<td>@runes.RarityID			</td>
 							<td>@runes.Slot				</td>
 							<td>@runes.MainStat			</td>
-							<td>@runes.PrefixStat		</td>
+							@*<td>@runes.PrefixStat		</td>
 							<td>@runes.PrefixStatValue	</td>
 							<td>@runes.Stat1			</td>
 							<td>@runes.Stat1Value		</td>
@@ -83,9 +83,9 @@
 							<td>@runes.Stat4			</td>
 							<td>@runes.Stat4Value		</td>
 							<td>@runes.Stat4Amplify		</td>
-							<td>@runes.StatConverted	</td>
-							<td class="col-sm-3">
-								<button title="Tag" class="btn oi oi-tags"></button>
+							<td>@runes.StatConverted	</td>*@
+							<td>
+								<button title="Edit" class="btn oi oi-pencil"></button>
 							</td>
 						</tr>
 					}
